@@ -6,7 +6,7 @@ DEBIAS_internal <- function(Y,Tx,tp,Xp,lambda,alphak = NULL, max_iter = 100, tol
   # Inputs:
   #   Y: outcome items, where column names should contain numeric time points. The number of outcome items per time point must be the same.
   #   Tx: treatment assignments, where column names should again contain numeric time points
-  #   tp: time point of interest (varible p in the paper)
+  #   tp: time point of interest (variable p in the paper)
   #   Xp: covariates. Must not contain any missing values
   #   lambda: non-negative weight for confounding penalty (b)
   #   alphak: matrix of non-negative weights computed in past iterations for orthogonality penalty
@@ -17,10 +17,10 @@ DEBIAS_internal <- function(Y,Tx,tp,Xp,lambda,alphak = NULL, max_iter = 100, tol
   #
   # Outputs: A list with
   #   alpha: vector of non-negative weights
-  #   cors: main correlation term (a) for each time point
-  #   cof_cors: square root of confounding penalty term (b) for each time point
-  #   penalty_pval: p-value of confounding penalty term (b)
-  #   overlap: Mahalanobis cosine similarity for orthogonality penalty (c)
+  #   main_correlations: main correlation term (a) for each time point
+  #   confounding_correlations: square root of confounding penalty term (b) (i.e., its absolute value of correlation instead of squared correlation) for each time point
+  #   confounding_pvalue: p-value of confounding penalty term (b)
+  #   Mahalanobis_cosine_similarity: Mahalanobis cosine similarity for orthogonality penalty (c)
   #   lambda: lambda value
   #
   # Written by Eric V. Strobl 06/2025
@@ -155,7 +155,8 @@ DEBIAS_internal <- function(Y,Tx,tp,Xp,lambda,alphak = NULL, max_iter = 100, tol
     }
   }
   
-  return(list(alpha = alpha, cors = cors, cof_cors = conf_cors, penalty_pval = penalty_pval, overlap = cosine_mean, lambda = lambda))
+  return(list(alpha = alpha, main_correlations = cors, confounding_correlations = conf_cors, 
+              confounding_pvalue = penalty_pval, Mahalanobis_cosine_similarity = cosine_mean, lambda = lambda))
 }
 
 backtracking <- function(alpha,grad,Ym,Tm,Yn,Tn,lambda,ip,alphak=NULL,Cs=NULL,eta=1){
