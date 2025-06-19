@@ -19,7 +19,7 @@ DEBIAS_internal <- function(Y,Tx,tp,Xp,lambda,alphak = NULL, max_iter = 100, tol
   #   alpha: vector of non-negative weights
   #   main_correlations: main correlation term (a) for each time point
   #   confounding_correlations: square root of confounding penalty term (b) (i.e., its absolute value of correlation instead of squared correlation) for each time point
-  #   confounding_pvalue: p-value of confounding penalty term (b)
+  #   confounding_pvalues: p-value of confounding penalty term (b) for each time point
   #   Mahalanobis_cosine_similarity: Mahalanobis cosine similarity for orthogonality penalty (c)
   #   lambda: lambda value
   #
@@ -156,7 +156,7 @@ DEBIAS_internal <- function(Y,Tx,tp,Xp,lambda,alphak = NULL, max_iter = 100, tol
   }
   
   return(list(alpha = alpha, main_correlations = cors, confounding_correlations = conf_cors, 
-              confounding_pvalue = penalty_pval, Mahalanobis_cosine_similarity = cosine_mean, lambda = lambda))
+              confounding_pvalues = penalty_pval, Mahalanobis_cosine_similarity = cosine_mean, lambda = lambda))
 }
 
 backtracking <- function(alpha,grad,Ym,Tm,Yn,Tn,lambda,ip,alphak=NULL,Cs=NULL,eta=1){
