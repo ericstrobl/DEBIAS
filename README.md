@@ -58,9 +58,9 @@ A list of `max_iterk` models with the following per model:
 
 `lambda` = optimal lambda value
 
-`main_correlations_testset` = main correlation term (a) on test/validation set
+`main_correlations_testset` = main correlation term (a) on test/validation set (if present)
 
-`confounding_pvalues_testset` = confounding penalty (b) p-value on test/validation set
+`confounding_pvalues_testset` = confounding penalty (b) p-value on test/validation set (if present)
 
 
 
