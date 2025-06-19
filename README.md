@@ -38,7 +38,7 @@ Optional:
 
 > data = generate_synthetic_longitudinal_data(nsamps=1000) # generate synthetic longitudinal data
 
-> mods = DEBIAS(Y,X,time,k=5) # run DEBIAS
+> mods = DEBIAS(data$Y,data$Tx,tp=2,data$X, data$Yte,data$Txte,data$Xte,max_iterk=3) # run DEBIAS
 
 # Outputs
 
