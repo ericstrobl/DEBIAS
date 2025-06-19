@@ -12,30 +12,55 @@ Causal inference in longitudinal biomedical data remains a central challenge, es
 
 # Inputs
 
-`X` = $n$ by $p$ matrix of $p$ predictors
+`Y` = outcome items, where column names should contain numeric time points. The number of outcome items per time point must be the same.
 
-`Y` = $n$ by $q$ matrix of $q$ rating scale items
+`Tx` = treatment assignments, where column names should again contain numeric time points
 
-`time` = column vector of length $n$ with follow-up times
+`tp` = time point of interest (variable p in the paper)
+ 
+`Xp` = covariates. Must not contain any missing values
 
-`k` (optional) = number of summary scores to extract, default is $k=p$
+Optional:
+
+`Yte` = outcome items for test/validation set evaluation (default: NULL)
+  
+`Txte` = treatment assignment for test/validation set evaluation (default: NULL)
+  
+`Xpte` = outcome items for test/validation set evaluation (default: NULL)
+  
+`lambdas` = grid of lambda values for cross-validation (default: 0,1,...,10)
+  
+`nf` = number of cross-validation folds (default: 5)
+  
+`max_iterk` = maximum number of non-negative weights to extract (default: 3, variable s in the paper)
 
 # Run the Algorithm
 
-> Y = matrix(runif(1000),100,10) # generate synthetic values of the clinical rating scale items
+> data = generate_synthetic_longitudinal_data(nsamps=1000) # generate synthetic longitudinal data
 
-> X = matrix(rnorm(1000),100,10) # generate synthetic values of the predictors
-
-> time = rep(c(1,2,3,4),length.out=100) # generate synthetic time points
-
-> mods = SCORE(Y,X,time,k=5) # run SCORE
+> mods = DEBIAS(Y,X,time,k=5) # run DEBIAS
 
 # Outputs
 
-`mods` = list of $k$ models, where:
+A list of `max_iterk` models with the following per model:
 
-`$alpha` = length $q$ vector of non-negative weights of `Y`
+`alpha` = vector of non-negative weights
 
-`$beta` = $p$ by $m$ matrix of the (negative, zero or positive) weights of `X` 
+`main_correlations` = main correlation term (a) for each time point
+
+`confounding_correlations` = square root of confounding penalty term (b) for each time point
+
+`confounding_correlations` = square root of confounding penalty term (b) (i.e., absolute value of correlation instead of squared correlation) for each time point
+
+`confounding_pvalues` = p-value of confounding penalty term (b) for each time point
+
+`Mahalanobis_cosine_similarity` = Mahalanobis cosine similarity for orthogonality penalty (c)
+
+`lambda` = optimal lambda value
+
+`main_correlations_testset` = main correlation term (a) on test/validation set
+
+`confounding_pvalues_testset` = confounding penalty (b) p-value on test/validation set
+
 
 
