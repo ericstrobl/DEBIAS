@@ -40,8 +40,8 @@ DEBIAS <- function(Y,Tx,tp,Xp,Yte,Txte,Xpte,lambdas = c(0,1,2,3,4,5,6,7,8,9,10),
     
     for (l in 1:nL){
       mods = DEBIAS_sequential(Y[itr,],Tx[itr,],tp,Xp[itr,],
-                          Y[ite,],Tx[ite,],Xp[ite,],
-                          lambda=lambdas[l], max_iterk = max_iterk) # run DEBIAS max_iterk times, with evaluation on validation folds
+                               Y[ite,],Tx[ite,],Xp[ite,],
+                               lambda=lambdas[l], max_iterk = max_iterk) # run DEBIAS max_iterk times, with evaluation on validation folds
       conf_all = c()
       for (k in 1:max_iterk){
         cor_vals[l] = cor_vals[l] + mean(mods[[k]]$main_correlations_testset)/(nf*max_iterk)
@@ -50,10 +50,10 @@ DEBIAS <- function(Y,Tx,tp,Xp,Yte,Txte,Xpte,lambdas = c(0,1,2,3,4,5,6,7,8,9,10),
       conf_vals[l] = conf_vals[l] + mean(conf_all)/nf
     }
   }
-
+  
   # indices where geometric mean of minimum p-values is above exp(-3) = 0.05
   ok = which(conf_vals > -3)
-
+  
   if (length(ok) > 0) {
     # among these, pick the index of max cor_vals
     best_idx = ok[which.max(cor_vals[ok])]
@@ -63,7 +63,7 @@ DEBIAS <- function(Y,Tx,tp,Xp,Yte,Txte,Xpte,lambdas = c(0,1,2,3,4,5,6,7,8,9,10),
   }
   
   # run DEBIAS sequentially max_iterk times on optimal lambda
-  mods = DEBIAS_once1_wte(Y,Tx,tp,Xp, Yte,Txte,Xpte, lambda=lambdas[best_idx], max_iterk = max_iterk)
+  mods = DEBIAS_sequential(Y,Tx,tp,Xp, Yte,Txte,Xpte, lambda=lambdas[best_idx], max_iterk = max_iterk)
   
   return(mods)
   
