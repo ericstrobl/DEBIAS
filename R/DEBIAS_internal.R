@@ -80,7 +80,7 @@ DEBIAS_internal <- function(Y,Tx,tp,Xp,lambda,alphak = NULL, max_iter = 100, tol
   
   for (iter in 1:max_iter) {
     alpha_old = alpha
-
+    
     ### compute gradients
     grad = 0; grad_conf = 0; grad_cosine = 0 
     cosine_mean = 0
@@ -96,8 +96,8 @@ DEBIAS_internal <- function(Y,Tx,tp,Xp,lambda,alphak = NULL, max_iter = 100, tol
         den = norm(Yn[[i]][[j]] %*% alpha, "2") + 1E-10
         U = c(t(Yn[[i]][[j]] %*% alpha) %*% Tn[[i]][[j]])
         grad_conf = grad_conf + (U * t(Yn[[i]][[j]]) %*% Tn[[i]][[j]] / den^2 - 
-                                         ((U^2)/ den^4) * t(Yn[[i]][[j]]) %*% Yn[[i]][[j]] %*% alpha)
-      
+                                   ((U^2)/ den^4) * t(Yn[[i]][[j]]) %*% Yn[[i]][[j]] %*% alpha)
+        
       }
       
       # gradient of orthogonality penalty (c)
@@ -106,7 +106,7 @@ DEBIAS_internal <- function(Y,Tx,tp,Xp,lambda,alphak = NULL, max_iter = 100, tol
         for (k in 1:ncol(alphak)){
           grad_cosine = grad_cosine + (Cs[[i]] %*% alphak[,k] / c(sqrt(t(alphak[,k]) %*% Cs[[i]] %*% alphak[,k]) * sqrt(t(alpha) %*% Cs[[i]] %*% alpha)+1E-10) - 
                                          c(t(alphak[,k]) %*% Cs[[i]] %*% alpha)/c(sqrt(t(alphak[,k]) %*% Cs[[i]] %*% alphak[,k]) *
-                                                                                       (t(alpha) %*% Cs[[i]] %*% alpha)^(3/2)+1E-10) * Cs[[i]] %*% alpha)
+                                                                                    (t(alpha) %*% Cs[[i]] %*% alpha)^(3/2)+1E-10) * Cs[[i]] %*% alpha)
         }
       }
       
@@ -120,7 +120,7 @@ DEBIAS_internal <- function(Y,Tx,tp,Xp,lambda,alphak = NULL, max_iter = 100, tol
     }
     
     # backtracking line search with the Armijo condition
-    eta = backtracking(alpha,grad,Ym,Tm,Yn,Tn,lambda,ip,alphak,Cs)
+    eta = backtracking(alpha,grad,Ym,Tm,Yn,Tn,lambda,ip,m,alphak,Cs)
     
     # take gradient step (maximization)
     alpha = alpha + eta*grad
@@ -133,7 +133,7 @@ DEBIAS_internal <- function(Y,Tx,tp,Xp,lambda,alphak = NULL, max_iter = 100, tol
     if ( sum(abs(alpha - alpha_old)) < tol) {
       break
     }
-
+    
   }
   
   # project back onto feasible set, again
@@ -159,29 +159,28 @@ DEBIAS_internal <- function(Y,Tx,tp,Xp,lambda,alphak = NULL, max_iter = 100, tol
               confounding_pvalues = penalty_pval, Mahalanobis_cosine_similarity = cosine_mean, lambda = lambda))
 }
 
-backtracking <- function(alpha,grad,Ym,Tm,Yn,Tn,lambda,ip,alphak=NULL,Cs=NULL,eta=1){
+backtracking <- function(alpha,grad,Ym,Tm,Yn,Tn,lambda,ip,m,alphak=NULL,Cs=NULL,eta=1){
   ## backtracking line search with the Armijo condition
   
   for (i in 1:100){ # Armijo condition
-    if (my_obj(alpha + eta*grad,Ym,Tm,Yn,Tn,lambda,ip,alphak,Cs) < (my_obj(alpha,Ym,Tm,Yn,Tn,lambda,ip,alphak,Cs) + 1E-10*eta*norm(grad,"2")^2)){
+    if (my_obj(alpha + eta*grad,Ym,Tm,Yn,Tn,lambda,ip,m,alphak,Cs) < (my_obj(alpha,Ym,Tm,Yn,Tn,lambda,ip,m,alphak,Cs) + 1E-10*eta*norm(grad,"2")^2)){
       eta = 0.5*eta
     } else{
       break
     }
     
   }
-
+  
   return(eta)
   
 }
 
-my_obj <- function(alpha,Ym,Tm,Yn,Tn,lambda,ip,alphak = NULL,Cs=NULL){
+my_obj <- function(alpha,Ym,Tm,Yn,Tn,lambda,ip,m,alphak = NULL,Cs=NULL){
   ## compute objective function for Armijo condition
   
   # project onto feasible set
   alpha = pmax(alpha,0)
   alpha = alpha / (sum(alpha)+1e-10)
-  m = length(u_time)
   cors = 0; cors_conf = 0; cors_cosine = 0
   for (i in (ip+1):m){
     # main correlation term (a)
@@ -221,4 +220,3 @@ normalize_uncor <- function(x){
   # print(sqrt(sum((x - mean(x))^2)))
   x
 }
-
