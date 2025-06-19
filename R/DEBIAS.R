@@ -23,8 +23,8 @@ DEBIAS <- function(Y,Tx,tp,Xp,Yte,Txte,Xpte,lambdas = c(0,1,2,3,4,5,6,7,8,9,10),
   #     confounding_pvalues: p-value of confounding penalty term (b) for each time point
   #     Mahalanobis_cosine_similarity: Mahalanobis cosine similarity for orthogonality penalty (c)
   #     lambda: optimal lambda value
-  #     main_correlations_testset: main correlation term (a) on test/validation set
-  #     confounding_pvalues_testset: confounding penalty (b) p-value on test/validation set
+  #     main_correlations_testset: main correlation terms (a) on test/validation set
+  #     confounding_pvalues_testset: confounding penalty (b) p-values on test/validation set
   #
   # Written by Eric V. Strobl 06/2025
   #
