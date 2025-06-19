@@ -16,8 +16,8 @@ DEBIAS_sequential <- function(Y, Tx, tp, Xp, Yte=NULL, Txte=NULL, Xpte=NULL, lam
   #
   # Outputs:
   #   mods: a list of models with output of DEBIAS_internal.R and:
-  #     main_correlation_testset: main correlation term (a) on test/validation set
-  #     confounding_pvalue_testset: confounding penalty (b) p-value on test/validation set
+  #     main_correlations_testset: main correlation terms (a) on test/validation set
+  #     confounding_pvalues_testset: confounding penalty (b) p-values on test/validation set
   #
   # Written by Eric V. Strobl 06/2025
   #
@@ -52,7 +52,7 @@ DEBIAS_sequential <- function(Y, Tx, tp, Xp, Yte=NULL, Txte=NULL, Xpte=NULL, lam
         
         new_corN = cor(residY %*% mods[[k]]$alpha, residT)
         if (is.na(new_corN)){ new_corN = 0}
-        mods[[k]]$main_correlation_testset = c(mods[[k]]$main_correlation_testset,new_corN)
+        mods[[k]]$main_correlations_testset = c(mods[[k]]$main_correlations_testset,new_corN)
         
         # corr_abs = 0
         corr_abs = c()
@@ -71,7 +71,7 @@ DEBIAS_sequential <- function(Y, Tx, tp, Xp, Yte=NULL, Txte=NULL, Xpte=NULL, lam
           
           corr_abs <- c(corr_abs, cor_to_pval(new_corr_abs,sum(icte)))
         }
-        mods[[k]]$confounding_pvalue_testset = c(mods[[k]]$confounding_pvalue_testset,min(corr_abs))
+        mods[[k]]$confounding_pvalues_testset = c(mods[[k]]$confounding_pvalues_testset,min(corr_abs))
         
       }
       
