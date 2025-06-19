@@ -20,11 +20,11 @@ DEBIAS <- function(Y,Tx,tp,Xp,Yte,Txte,Xpte,lambdas = c(0,1,2,3,4,5,6,7,8,9,10),
   #     alpha: vector of non-negative weights
   #     main_correlations: main correlation term (a) for each time point
   #     confounding_correlations: square root of confounding penalty term (b) (i.e., its absolute value of correlation instead of squared correlation) for each time point
-  #     confounding_pvalue: p-value of confounding penalty term (b)
+  #     confounding_pvalues: p-value of confounding penalty term (b) for each time point
   #     Mahalanobis_cosine_similarity: Mahalanobis cosine similarity for orthogonality penalty (c)
   #     lambda: optimal lambda value
-  #     main_correlation_testset: main correlation term (a) on test/validation set
-  #     confounding_pvalue_testset: confounding penalty (b) p-value on test/validation set
+  #     main_correlations_testset: main correlation term (a) on test/validation set
+  #     confounding_pvalues_testset: confounding penalty (b) p-value on test/validation set
   #
   # Written by Eric V. Strobl 06/2025
   #
@@ -44,8 +44,8 @@ DEBIAS <- function(Y,Tx,tp,Xp,Yte,Txte,Xpte,lambdas = c(0,1,2,3,4,5,6,7,8,9,10),
                           lambda=lambdas[l], max_iterk = max_iterk) # run DEBIAS max_iterk times, with evaluation on validation folds
       conf_all = c()
       for (k in 1:max_iterk){
-        cor_vals[l] = cor_vals[l] + mean(mods[[k]]$main_correlation_testset)/(nf*max_iterk)
-        conf_all = c(conf_all, min(log(mods[[k]]$confounding_pvalue_testset+1E-10)))
+        cor_vals[l] = cor_vals[l] + mean(mods[[k]]$main_correlations_testset)/(nf*max_iterk)
+        conf_all = c(conf_all, min(log(mods[[k]]$confounding_pvalues_testset+1E-10)))
       }
       conf_vals[l] = conf_vals[l] + mean(conf_all)/nf
     }
