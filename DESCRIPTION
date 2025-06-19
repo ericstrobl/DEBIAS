@@ -1,0 +1,11 @@
+Package: DEBIAS
+Type: Package
+Title: Durable Effects with Backdoor-Invariant Aggregated Symptoms
+Version: 0.1.0
+Author: Eric V. Strobl
+Maintainer: Eric V. Strobl <eric.strobl@pitt.edu>
+Description: DEBIAS learns non-negative, clinically interpretable weights for outcome aggregation, maximizing durable treatment effects and empirically minimizing both observed and latent confounding by leveraging the time-limited direct effects of prior treatments.
+Depends:
+License: CC BY-NC 4.0
+Encoding: UTF-8
+LazyData: true
