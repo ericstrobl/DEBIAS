@@ -21,7 +21,6 @@ DEBIAS <- function(Y,Tx,tp,Xp,Yte,Txte,Xpte,lambdas = c(0,1,2,3,4,5,6,7,8,9,10),
   #     main_correlations: main correlation term (a) for each time point
   #     confounding_correlations: square root of confounding penalty term (b) (i.e., its absolute value of correlation instead of squared correlation) for each time point
   #     confounding_pvalues: p-value of confounding penalty term (b) for each time point
-  #     Mahalanobis_cosine_similarity: Mahalanobis cosine similarity for orthogonality penalty (c)
   #     lambda: optimal lambda value
   #     main_correlations_testset: main correlation terms (a) on test/validation set
   #     confounding_pvalues_testset: confounding penalty (b) p-values on test/validation set
