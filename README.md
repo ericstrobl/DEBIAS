@@ -50,8 +50,6 @@ A list of `max_iterk` models with the following per model:
 
 `confounding_correlations` = square root of confounding penalty term (b) for each time point
 
-`confounding_correlations` = square root of confounding penalty term (b) (i.e., absolute value of correlation instead of squared correlation) for each time point
-
 `confounding_pvalues` = p-value of confounding penalty term (b) for each time point
 
 `lambda` = optimal lambda value
