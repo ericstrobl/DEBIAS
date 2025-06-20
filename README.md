@@ -54,8 +54,6 @@ A list of `max_iterk` models with the following per model:
 
 `confounding_pvalues` = p-value of confounding penalty term (b) for each time point
 
-`Mahalanobis_cosine_similarity` = Mahalanobis cosine similarity for orthogonality penalty (c)
-
 `lambda` = optimal lambda value
 
 `main_correlations_testset` = main correlation term (a) on test/validation set (if present)
