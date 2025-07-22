@@ -9,7 +9,7 @@ DEBIAS_internal <- function(Y,Tx,tp,Xp,lambda,alphak = NULL, max_iter = 100, tol
   #   tp: time point of interest (variable p in the paper)
   #   Xp: covariates. Must not contain any missing values
   #   lambda: non-negative weight for confounding penalty (b)
-  #   alphak: matrix of non-negative weights computed in past iterations for orthogonality penalty
+  #   alphak: matrix of non-negative weights computed in past iterations for diversity-promoting penalty
   #   max_iter: the maximum number of gradient steps (default: 100)
   #   tol: convergence tolerance (default: 1e-4)
   #
@@ -53,7 +53,7 @@ DEBIAS_internal <- function(Y,Tx,tp,Xp,lambda,alphak = NULL, max_iter = 100, tol
     
     Ym[[i]] = lm.fit(cbind(1,Xp[ic,],Tx[ic,tT==u_time[1]]),Y[ic,tY==u_time[i]])$residuals
     
-    # correlation matrices of Y in orthogonality penalty (c)
+    # correlation matrices of Y in diversity-promoting penalty (c)
     io = complete.cases(Y[,tY==u_time[i]])
     Cs[[i]] = cor(Y[io,tY==u_time[i]])
     
@@ -99,7 +99,7 @@ DEBIAS_internal <- function(Y,Tx,tp,Xp,lambda,alphak = NULL, max_iter = 100, tol
         
       }
       
-      # gradient of orthogonality penalty (c)
+      # gradient of diversity-promoting penalty (c)
       if (!is.null(alphak)){
         
         for (k in 1:ncol(alphak)){
